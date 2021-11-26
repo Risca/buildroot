@@ -19,7 +19,7 @@ loadaddress=0x400000   # OK for Linux images up to 8MB, don't change!
 
 # Add any command-line options here, e.g. console=uart,io,0x3f8
 # max len is 1024 bytes.
-cmdline = "console=uart,io,0x3f8 rootfstype=squashfs,jffs2 init=/linuxrc"
+cmdline = "console=uart,io,0x3f8 rootfstype=ext2 root=/dev/sda init=/linuxrc rootwait ro"
 
 
 # No user-servicable parts beyond this line
