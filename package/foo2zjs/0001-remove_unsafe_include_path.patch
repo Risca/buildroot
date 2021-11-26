@@ -1,0 +1,15 @@
+--- a/Makefile	2021-04-26 09:46:47.000000000 +0200
++++ b/Makefile	2021-11-26 15:01:14.341403787 +0100
+@@ -593,10 +593,10 @@
+ 	$(CC) $(CFLAGS) zjsdecode.o $(LIBJBG) -o $@
+ 
+ command2foo2lava-pjl: command2foo2lava-pjl.o
+-	$(CC) $(CFLAGS) -L/usr/local/lib command2foo2lava-pjl.o -lcups -o $@
++	$(CC) $(CFLAGS) command2foo2lava-pjl.o -lcups -o $@
+ 
+ command2foo2lava-pjl.o: command2foo2lava-pjl.c
+-	$(CC) $(CFLAGS) -I/usr/local/include -c command2foo2lava-pjl.c
++	$(CC) $(CFLAGS) -c command2foo2lava-pjl.c
+ 
+ #
+ # Installation rules

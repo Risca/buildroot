@@ -1,0 +1,38 @@
+config BR2_PACKAGE_FOO2ZJS
+	bool "foo2zjs"
+	depends on BR2_PACKAGE_CUPS
+	help
+	  foo2zjs converts pbm (B/W) images and 1-bit-per-pixel cmyk images
+	  (both produced by ghostscript) to Zenographics ZJ-stream format. There
+	  is some information about the ZJS format at http://ddk.zeno.com.
+	  
+	  With foo2zjs, you can print to some HP and Minolta/QMS ZjStream
+	  printers, such as these:
+
+	  	- Konica Minolta magicolor 2430 DL	B/W and color
+	  	- Minolta/QMS 2300 DL			B/W and color
+	  	- Minolta/QMS 2200 DL			B/W and color
+	  	- HP LaserJet P2035			B/W
+	  	- HP LaserJet M1319 MFP			B/W
+	  	- HP LaserJet Pro P1606dn		B/W
+	  	- HP LaserJet Pro P1566			B/W
+	  	- HP LaserJet Pro P1102			B/W
+	  	- HP LaserJet Pro CP1025nw		B/W and color
+	  	- HP LaserJet 1022			B/W
+	  	- HP LaserJet 1020			B/W
+	  	- HP LaserJet 1018			B/W
+	  	- HP LaserJet 1005			B/W
+	  	- HP LaserJet 1000			B/W
+	  
+	  http://foo2zjs.rkkda.com/ (dead)
+	  https://github.com/koenkooi/foo2zjs (mirror)
+
+if BR2_PACKAGE_FOO2ZJS
+
+config BR2_PACKAGE_FOO2ZJS_PRINTER_MODELS
+	string "printer firmware"
+	default "all"
+	help
+	  What firmware files to install to target, or "all" for everything.
+
+endif
