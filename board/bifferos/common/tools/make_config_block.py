@@ -13,13 +13,17 @@
 
 bootsource=0    # 0=flash, 1=MMC, 2=Network
 console=1       # 1=serial console enable, 0=disable
-nic=1           # 0=net console disabled, 1=enabled, 2=promiscuous
+nic=0           # 0=net console disabled, 1=enabled, 2=promiscuous
 boottype=1      # 1=linux, 0=flat bin, 2=multiboot/ELF, 3=coreboot payload
 loadaddress=0x400000   # OK for Linux images up to 8MB, don't change!
+upgrade_available=0 # 0=no, 1=yes
+bootcount=0     # Only increment when upgrade_available == 1
+boot_part=1     # Default to sda1
+
 
 # Add any command-line options here, e.g. console=uart,io,0x3f8
 # max len is 1024 bytes.
-cmdline = "console=uart,io,0x3f8 rootfstype=ext2 root=/dev/sda init=/linuxrc rootwait ro"
+cmdline = "console=uart,io,0x3f8 rootfstype=ext2 root=/dev/sda init=/sbin/init rootwait ro"
 
 
 # No user-servicable parts beyond this line
@@ -30,7 +34,7 @@ import struct, sys, hashlib, os
 
 def GetConfig(kernelmax):
   "Return 8K config block with correct md5"
-  version = 1   # always 1 for this version.
+  version = 2   # always 2 for this version.
   cfg = struct.pack("<iBBBBL", version,
     bootsource,console,nic,boottype, loadaddress)
       
@@ -41,6 +45,12 @@ def GetConfig(kernelmax):
   
   # kernelmax is a 2-byte value
   cfg += struct.pack("<H", kernelmax)
+
+  # button on
+  cfg += struct.pack("<B", 1);
+
+  # v2 entries
+  cfg += struct.pack("<BBB", upgrade_available, bootcount, boot_part);
     
   while len(cfg)<(0x2000-0x10):
     cfg += "\xff"

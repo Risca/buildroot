@@ -1,0 +1,16 @@
+#!/bin/sh
+
+case $1 in
+    block)
+        if [ "x${ACTION-}" == "xadd" ]; then
+            eval $(grep DEVNAME= /sys/${DEVPATH}/uevent)
+            if grep "root=/dev/${DEVNAME-}\b" /proc/cmdline; then
+                mount -o ro /dev/${DEVNAME} /mnt
+                kexec -l /mnt/boot/bzImage --reuse-cmdline
+                kexec -e --no-ifdown
+            fi
+        fi
+        ;;
+    *)
+        ;;
+esac

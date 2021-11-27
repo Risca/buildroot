@@ -13,7 +13,6 @@ BR2_TARGET_OPTIMIZATION="-march=i486 -mtune=i486"
 # BR2_TARGET_GENERIC_GETTY is not set
 BR2_SYSTEM_DHCP="eth0"
 BR2_ROOTFS_OVERLAY="board/bifferos/bifferboard/rootfs_overlay"
-BR2_ROOTFS_POST_IMAGE_SCRIPT="board/bifferos/common/post_image.sh"
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="file:///storage/dev/bifferboard/files/linux-2.6.37.6-openwrt-bifferboard.tar.xz"

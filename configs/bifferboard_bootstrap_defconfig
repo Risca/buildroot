@@ -1,0 +1,32 @@
+BR2_x86_i486=y
+BR2_DL_DIR="/storage/dev/beagleboard/buildroot-dl"
+BR2_CCACHE=y
+BR2_CCACHE_DIR="$(HOME)/.buildroot-bifferboard-ccache"
+BR2_STATIC_LIBS=y
+BR2_KERNEL_HEADERS_VERSION=y
+BR2_DEFAULT_KERNEL_VERSION="2.6.37"
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_REALLY_OLD=y
+# BR2_UCLIBC_INSTALL_UTILS is not set
+BR2_TARGET_OPTIMIZATION="-march=i486 -mtune=i486"
+BR2_TARGET_GENERIC_HOSTNAME="bb_bootstrap"
+BR2_INIT_NONE=y
+BR2_ROOTFS_DEVICE_CREATION_STATIC=y
+BR2_ROOTFS_DEVICE_TABLE="board/bifferos/bifferboard_bootstrap/device_table.txt"
+# BR2_TARGET_ENABLE_ROOT_LOGIN is not set
+# BR2_TARGET_GENERIC_GETTY is not set
+# BR2_TARGET_GENERIC_REMOUNT_ROOTFS_RW is not set
+BR2_ROOTFS_OVERLAY="board/bifferos/bifferboard_bootstrap/rootfs_overlay"
+BR2_ROOTFS_POST_BUILD_SCRIPT="board/bifferos/bifferboard_bootstrap/post_build.sh"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="board/bifferos/bifferboard_bootstrap/post_image.sh"
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
+BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="file:///storage/dev/bifferboard/files/linux-2.6.37.6-openwrt-bifferboard.tar.xz"
+BR2_LINUX_KERNEL_PATCH="board/bifferos/bifferboard_bootstrap/patches/linux"
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="board/bifferos/bifferboard_bootstrap/linux.config"
+BR2_LINUX_KERNEL_LZMA=y
+BR2_PACKAGE_BUSYBOX_CONFIG="board/bifferos/bifferboard_bootstrap/busybox.config"
+BR2_PACKAGE_KEXEC=y
+BR2_PACKAGE_KEXEC_ZLIB=y
+# BR2_PACKAGE_IFUPDOWN_SCRIPTS is not set
+BR2_TARGET_ROOTFS_INITRAMFS=y
