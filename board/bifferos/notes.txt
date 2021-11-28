@@ -1,0 +1,5 @@
+Mender variables needed in config:
+* upgrade_available
+* mender_boot_part
+* mender_boot_part_hex (might emulate)
+* bootcount
