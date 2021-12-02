@@ -35,7 +35,17 @@ MENDER_LICENSE_FILES = \
 
 MENDER_DEPENDENCIES = xz
 
-MENDER_LDFLAGS = -X github.com/mendersoftware/mender/conf.Version=$(MENDER_VERSION)
+MENDER_SUBDIR = src/github.com/mendersoftware/mender
+
+define MENDER_EXTRACT_CMDS
+	mkdir -p $(@D)/$(MENDER_SUBDIR)
+	$(ZCAT) $(MENDER_DL_DIR)/$(MENDER_SOURCE) | \
+	$(TAR) --strip-components=$(MENDER_STRIP_COMPONENTS) \
+		-C $(@D)/$(MENDER_SUBDIR) \
+		$(TAR_OPTIONS) -
+	$(SED) "s/Version string$$/Version string = \"$(MENDER_VERSION)\"/" \
+		$(@D)/$(MENDER_SUBDIR)/conf/version.go
+endef
 
 MENDER_UPDATE_MODULES_FILES = \
 	directory \
@@ -53,10 +63,10 @@ define MENDER_INSTALL_CONFIG_FILES
 	$(INSTALL) -D -m 0644 $(MENDER_PKGDIR)/server.crt \
 		$(TARGET_DIR)/etc/mender/server.crt
 
-	$(INSTALL) -D -m 0755 $(@D)/support/mender-device-identity \
+	$(INSTALL) -D -m 0755 $(@D)/$(MENDER_SUBDIR)/support/mender-device-identity \
 		$(TARGET_DIR)/usr/share/mender/identity/mender-device-identity
 	$(foreach f,hostinfo network os rootfs-type, \
-		$(INSTALL) -D -m 0755 $(@D)/support/mender-inventory-$(f) \
+		$(INSTALL) -D -m 0755 $(@D)/$(MENDER_SUBDIR)/support/mender-inventory-$(f) \
 			$(TARGET_DIR)/usr/share/mender/inventory/mender-inventory-$(f)
 	)
 
@@ -69,7 +79,7 @@ define MENDER_INSTALL_CONFIG_FILES
 	mkdir -p $(TARGET_DIR)/var/lib
 	ln -snf /var/run/mender $(TARGET_DIR)/var/lib/mender
 	$(foreach f,$(MENDER_UPDATE_MODULES_FILES), \
-		$(INSTALL) -D -m 0755 $(@D)/support/modules/$(notdir $(f)) \
+		$(INSTALL) -D -m 0755 $(@D)/$(MENDER_SUBDIR)/support/modules/$(notdir $(f)) \
 			$(TARGET_DIR)/usr/share/mender/modules/v3/$(notdir $(f))
 	)
 endef
