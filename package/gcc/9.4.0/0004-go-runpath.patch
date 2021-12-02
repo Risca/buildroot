@@ -1,0 +1,11 @@
+--- a/gotools/Makefile.in
++++ b/gotools/Makefile.in
+@@ -346,6 +346,6 @@
+ GOCFLAGS = $(CFLAGS_FOR_TARGET)
+ GOCOMPILE = $(GOCOMPILER) $(GOCFLAGS)
+ AM_GOCFLAGS = -I $(libgodir)
+-AM_LDFLAGS = -L $(libgodir) -L $(libgodir)/.libs
++AM_LDFLAGS = -Wl,-rpath=$(libdir) -L $(libgodir) -L $(libgodir)/.libs
+ GOLINK = $(GOCOMPILER) $(GOCFLAGS) $(AM_GOCFLAGS) $(LDFLAGS) $(AM_LDFLAGS) -o $@
+ libgosrcdir = $(srcdir)/../libgo/go
+ cmdsrcdir = $(libgosrcdir)/cmd

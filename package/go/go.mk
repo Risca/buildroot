@@ -69,6 +69,27 @@ endif
 
 # For the convienience of target packages.
 HOST_GO_TOOLDIR = $(HOST_GO_ROOT)/pkg/tool/linux_$(GO_GOARCH)
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
+# TODO This list could use some refactoring
+HOST_GO_TARGET_ENV = \
+	GOROOT="$(STAGING_DIR)" \
+	GCCGO="$(TARGET_CROSS)gccgo" \
+	GOPATH="$(@D)" \
+	GOPROXY=off \
+	PATH=$(BR_PATH) \
+	GOBIN= \
+	CGO_ENABLED=$(HOST_GO_CGO_ENABLED) \
+	GOARCH=$(GO_GOARCH) \
+	GOCACHE="$(HOST_GO_TARGET_CACHE)" \
+	CC="$(TARGET_CC)" \
+	CXX="$(TARGET_CXX)" \
+	CGO_CFLAGS="$(TARGET_CFLAGS)" \
+	CGO_CXXFLAGS="$(TARGET_CXXFLAGS)" \
+	CGO_LDFLAGS="$(TARGET_LDFLAGS)" \
+	GO111MODULE=off \
+	GOFLAGS=-mod=vendor \
+	GOTOOLDIR="$(HOST_DIR)/bin"
+else
 HOST_GO_TARGET_ENV = \
 	$(HOST_GO_COMMON_ENV) \
 	GOARCH=$(GO_GOARCH) \
@@ -79,6 +100,7 @@ HOST_GO_TARGET_ENV = \
 	CGO_CXXFLAGS="$(TARGET_CXXFLAGS)" \
 	CGO_LDFLAGS="$(TARGET_LDFLAGS)" \
 	GOTOOLDIR="$(HOST_GO_TOOLDIR)"
+endif
 
 # The go compiler's cgo support uses threads.  If BR2_TOOLCHAIN_HAS_THREADS is
 # set, build in cgo support for any go programs that may need it.  Note that

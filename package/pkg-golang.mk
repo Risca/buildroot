@@ -41,13 +41,28 @@ GO_BIN = $(HOST_DIR)/bin/go
 define inner-golang-package
 
 $(2)_BUILD_OPTS += \
-	-ldflags "$$($(2)_LDFLAGS)" \
 	-tags "$$($(2)_TAGS)" \
-	-trimpath \
 	-p $(PARALLEL_JOBS)
 
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
+$(2)_BUILD_OPTS += \
+	-gccgoflags "$$($(2)_LDFLAGS)"
+else
+$(2)_BUILD_OPTS += \
+	-ldflags "$$($(2)_LDFLAGS)" \
+	-trimpath
+endif
+
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO)$(BR2_TOOLCHAIN_GOLD_LINKER),yy)
+$(2)_LDFLAGS += -fuse-ld=gold
+endif
+
 # Target packages need the Go compiler on the host.
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
+$(2)_DEPENDENCIES += host-gcc-go
+else
 $(2)_DEPENDENCIES += host-go
+endif
 
 $(2)_BUILD_TARGETS ?= .
 
