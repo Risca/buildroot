@@ -286,6 +286,16 @@ config BR2_TARGET_OPTIMIZATION
 	  Optimizations to use when building for the target host.
 	  NOTE: gcc optimization level is defined in build options.
 
+config BR2_TOOLCHAIN_GOLD_LINKER
+	bool "Enable gold linker"
+	default n
+	help
+	  Enable the use of ld.gold.
+
+	  Please note that the default linker will still be ld.bfd and programs
+	  need to be explicitly linked with -fuse-ld=gold flag to use the gold
+	  linker.
+
 config BR2_TARGET_LDFLAGS
 	string "Target linker options"
 	help

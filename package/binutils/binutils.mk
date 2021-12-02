@@ -133,10 +133,26 @@ ifeq ($(BR2_BINUTILS_ENABLE_LTO),y)
 HOST_BINUTILS_CONF_OPTS += --enable-plugins --enable-lto
 endif
 
+# Busybox segfaults on init with gold linker. Maybe this issue:
+# https://sourceware.org/bugzilla/show_bug.cgi?id=26200
+# Set ld.bfd as default linker as workaround
+ifeq ($(BR2_TOOLCHAIN_GOLD_LINKER),y)
+BINUTILS_CONF_OPTS += \
+        --enable-ld=default \
+        --enable-gold
+
+HOST_BINUTILS_CONF_OPTS += \
+        --enable-ld=default \
+        --enable-gold
+endif
+
 # Hardlinks between binaries in different directories cause a problem
 # with rpath fixup, so we de-hardlink those binaries, and replace them
 # with copies instead.
 BINUTILS_TOOLS = ar as ld ld.bfd nm objcopy objdump ranlib readelf strip
+ifeq ($(BR2_TOOLCHAIN_GOLD_LINKER),y)
+BINUTILS_TOOLS += ld.gold
+endif
 define HOST_BINUTILS_FIXUP_HARDLINKS
 	$(foreach tool,$(BINUTILS_TOOLS),\
 		rm -f $(HOST_DIR)/$(GNU_TARGET_NAME)/bin/$(tool) && \

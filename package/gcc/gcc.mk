@@ -74,7 +74,7 @@ HOST_GCC_COMMON_CONF_OPTS = \
 	--target=$(GNU_TARGET_NAME) \
 	--with-sysroot=$(STAGING_DIR) \
 	--enable-__cxa_atexit \
-	--with-gnu-ld \
+        --enable-ld=default \
 	--disable-libssp \
 	--disable-multilib \
 	--disable-decimal-float \
@@ -84,6 +84,10 @@ HOST_GCC_COMMON_CONF_OPTS = \
 	--with-pkgversion="Buildroot $(BR2_VERSION_FULL)" \
 	--with-bugurl="http://bugs.buildroot.net/" \
 	--without-zstd
+
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GOLD_LINKER),y)
+HOST_GCC_COMMON_CONF_OPTS += --enable-gold
+endif
 
 # Don't build documentation. It takes up extra space / build time,
 # and sometimes needs specific makeinfo versions to work
