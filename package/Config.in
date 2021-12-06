@@ -431,6 +431,7 @@ endmenu
 	source "package/am335x-pru-package/Config.in"
 	source "package/apcupsd/Config.in"
 	source "package/avrdude/Config.in"
+	source "package/bb_env/Config.in"
 	source "package/bcache-tools/Config.in"
 	source "package/biosdevname/Config.in"
 	source "package/brickd/Config.in"

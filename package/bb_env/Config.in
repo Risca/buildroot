@@ -1,0 +1,8 @@
+config BR2_PACKAGE_BB_ENV
+	bool "bb_env"
+	select BR2_PACKAGE_GNUTLS
+	help
+	  Clone of the fw_printenv / fw_setenv tools from Das U-Boot, but made
+	  for BifferBoard, which allows access to the BifferBoard config block.
+
+	  https://github.com/Risca/bb_env
