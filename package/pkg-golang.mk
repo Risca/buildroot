@@ -21,7 +21,8 @@
 #
 ################################################################################
 
-GO_BIN = $(HOST_DIR)/bin/go
+HOST_GO_BIN = $(HOST_DIR)/bin/go
+GO_BIN = $(HOST_DIR)/native-buildroot-linux-unknown/bin/go
 
 ################################################################################
 # inner-golang-package -- defines how the configuration, compilation and
@@ -43,26 +44,6 @@ define inner-golang-package
 $(2)_BUILD_OPTS += \
 	-tags "$$($(2)_TAGS)" \
 	-p $(PARALLEL_JOBS)
-
-ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
-$(2)_BUILD_OPTS += \
-	-gccgoflags "$$($(2)_LDFLAGS)"
-else
-$(2)_BUILD_OPTS += \
-	-ldflags "$$($(2)_LDFLAGS)" \
-	-trimpath
-endif
-
-ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO)$(BR2_TOOLCHAIN_GOLD_LINKER),yy)
-$(2)_LDFLAGS += -fuse-ld=gold
-endif
-
-# Target packages need the Go compiler on the host.
-ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
-$(2)_DEPENDENCIES += host-gcc-go
-else
-$(2)_DEPENDENCIES += host-go
-endif
 
 $(2)_BUILD_TARGETS ?= .
 
@@ -101,6 +82,28 @@ $(2)_POST_PATCH_HOOKS += $(2)_GEN_GOMOD
 ifndef $(2)_BUILD_CMDS
 ifeq ($(4),target)
 
+# Target packages need the Go compiler on the host.
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
+$(2)_DEPENDENCIES += host-gcc-go
+else
+$(2)_DEPENDENCIES += host-go
+endif
+
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO),y)
+$(2)_BUILD_OPTS += \
+	-compiler gccgo \
+	-gccgoflags "$$($(2)_LDFLAGS)"
+else
+$(2)_BUILD_OPTS += \
+	-compiler gc \
+	-ldflags "$$($(2)_LDFLAGS)" \
+	-trimpath
+endif
+
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_GCCGO)$(BR2_TOOLCHAIN_GOLD_LINKER),yy)
+$(2)_LDFLAGS += -fuse-ld=gold
+endif
+
 ifeq ($(BR2_STATIC_LIBS),y)
 $(2)_LDFLAGS += -extldflags '-static'
 endif
@@ -118,12 +121,19 @@ define $(2)_BUILD_CMDS
 endef
 else
 # Build package for host
+$(2)_DEPENDENCIES += host-go
+
+$(2)_BUILD_OPTS += \
+	-compiler gc \
+	-ldflags "$$($(2)_LDFLAGS)" \
+	-trimpath
+
 define $(2)_BUILD_CMDS
 	$$(foreach d,$$($(2)_BUILD_TARGETS),\
 		cd $$(@D); \
 		$$(HOST_GO_HOST_ENV) \
 			$$($(2)_GO_ENV) \
-			$$(GO_BIN) build -v $$($(2)_BUILD_OPTS) \
+			$$(HOST_GO_BIN) build -v $$($(2)_BUILD_OPTS) \
 			-o $$(@D)/bin/$$(or $$($(2)_BIN_NAME),$$(notdir $$(d))) \
 			$$($(2)_GOMOD)/$$(d)
 	)
