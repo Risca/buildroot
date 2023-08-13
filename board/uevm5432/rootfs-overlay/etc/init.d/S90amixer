@@ -1,0 +1,45 @@
+#!/bin/sh
+########################################################################
+#
+# Description : Amixer command script
+#
+# Authors     : Patrik Dahlström
+#
+# Version     : 00.00
+#
+# Notes       :
+#
+########################################################################
+
+. /etc/sysconfig/functions
+
+case "${1}" in
+    start)
+
+        [ -r /etc/sysconfig/amixer ] &&
+            egrep -qv '^($|#)' /etc/sysconfig/amixer ||
+            exit 0
+
+        boot_mesg "Setting ALSA mixer settings: " ${INFO}
+
+        while read -r cmd; do
+            eval "${cmd}" > /dev/null
+
+            if [ $? -ne 0 ]; then
+                failedcmd="${failedcmd}${cmd}\n"
+            fi
+        done < /etc/sysconfig/amixer
+
+        boot_mesg "" ${NORMAL}
+        echo_ok
+
+        if [ -n "${failedcmd}" ]; then
+            boot_mesg "Failed to run:\n${failedcmd}" ${FAILURE}
+            echo_failure
+        fi
+        ;;
+    *)
+        echo "Usage: ${0} {start}"
+        exit 1
+        ;;
+esac

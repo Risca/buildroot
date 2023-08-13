@@ -1,0 +1,16 @@
+amixer cset -c 1 name='Headset Left Playback' 1
+amixer cset -c 1 name='Headset Right Playback' 1
+amixer cset -c 1 name='Headset Playback Volume' 12
+amixer cset -c 1 name='DL1 PDM Switch' 1
+amixer cset -c 1 name='Sidetone Mixer Playback' 1
+amixer cset -c 1 name='SDT DL Volume' 120
+amixer cset -c 1 name='DL1 Mixer Multimedia' 1
+amixer cset -c 1 name='DL1 Media Playback Volume' 110
+amixer sset -c 1 'Analog Left',0 'Aux/FM Left'
+amixer sset -c 1 'Analog Right',0 'Aux/FM Right'
+amixer sset -c 1 'Aux FM',0 7
+amixer sset -c 1 'AUDUL Media',0 149
+amixer sset -c 1 'Capture',0 4
+amixer sset -c 1 MUX_UL00,0 AMic0
+amixer sset -c 1 MUX_UL01,0 AMic1
+amixer sset -c 1 'AMIC UL',0 120
